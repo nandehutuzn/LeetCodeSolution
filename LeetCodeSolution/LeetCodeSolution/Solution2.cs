@@ -55,7 +55,7 @@ namespace LeetCodeSolution
                 else if (rights.Contains(s[i]))
                 {
                     char left = stack.Pop();
-                    
+
                     if (rights[leftDic[left]] != s[i])
                         return false;
                 }
@@ -374,12 +374,157 @@ namespace LeetCodeSolution
 
             }
             if (index == -1) return new[] { -1, -1 };
-            int left,right;
+            int left, right;
             left = right = index;
             while (left >= 0 && nums[left] == target) left--;
             while (right <= nums.Length - 1 && nums[right] == target) right++;
 
             return new[] { ++left, --right };
+        }
+
+
+        /* 给定一个已排序的数组，和一个待插入数组的值，返回该值插入后的索引
+         * Example 1:
+                Input: [1,3,5,6], 5
+                Output: 2
+
+            Example 2:
+                Input: [1,3,5,6], 2
+                Output: 1
+
+            Example 3:
+                Input: [1,3,5,6], 7
+                Output: 4
+        */
+
+        public static int SearchInsert(int[] nums, int target)
+        {
+            if (target <= nums[0]) return 0;
+            if (target >= nums[nums.Length - 1]) return nums.Length;
+
+            int lo = 0, hi = nums.Length - 1;
+            while (lo <= hi)
+            {
+                int mid = (lo + hi) / 2;
+                if (nums[mid] == target) return mid;
+                else if (nums[mid] > target) hi = mid - 1;
+                else lo = mid + 1;
+            }
+            return lo;
+        }
+
+        /// <summary>
+        /// 判断给出的一个九宫格是否正确，'.' 代表暂未填写
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        public bool IsValidSudoku(char[,] board)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                HashSet<char> rows = new HashSet<char>();
+                HashSet<char> columns = new HashSet<char>();
+                HashSet<char> cube = new HashSet<char>();
+                for (int j = 0; j < 9; j++)
+                {
+                    if (board[i, j] != '.' && !rows.Add(board[i, j]))
+                        return false;
+
+                    if (board[j, i] != '.' && !columns.Add(board[j, i]))
+                        return false;
+
+                    int rowIndex = 3 * (i / 3);
+                    int colIndex = 3 * (i % 3);
+                    if (board[rowIndex + j / 3, colIndex + j % 3] != '.' && !cube.Add(board[rowIndex + j / 3, colIndex + j % 3]))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 完成数独表  空单元格用 '.' 表示
+        /// </summary>
+        /// <param name="board"></param>
+        public static void SolvesSudoku(char[,] board)
+        {
+            if (board == null || board.Length == 0)
+                return;
+            Solve(board);
+        }
+
+        private static bool Solve(char[,] board)
+        {
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board.GetLongLength(0); j++)
+                {
+                    if (board[i, j] == '.')
+                    {
+                        for (char c = '1'; c <= '9'; c++)
+                        {
+                            if (IsValid(board, i, j, c))
+                            {
+                                board[i, j] = c;
+
+                                if (Solve(board))
+                                    return true;
+                                else
+                                    board[i, j] = '.';
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static bool IsValid(char[,] board, int row, int col, char c)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (board[i, col] != '.' && board[i, col] == c) return false;
+
+                if (board[row, i] != '.' && board[row, i] == c) return false;
+
+                if (board[3 * (row / 3) + i / 3, 3 * (col / 3) + i % 3] != '.' && board[3 * (row / 3) + i / 3, 3 * (col / 3) + i % 3] == c) return false;
+            }
+
+            return true;
+        }
+
+        public static string CountAndSay(int n)
+        {
+            if (n < 1) return null;
+
+            string result = "1";
+            for (int i = 2; i <= n; i++)
+            {
+                result = CountAndSay(result);
+            }
+            return result;
+        }
+
+        private static string CountAndSay(string str)
+        {
+            StringBuilder builder = new StringBuilder(128);
+
+            int count = 1;
+            for (int i = 1; i < str.Length; i++)
+            {
+                if (str[i] == str[i - 1])
+                    count++;
+                else
+                {
+                    builder.Append(count);
+                    builder.Append(str[i - 1]);
+                    count = 1;
+                }
+            }
+
+            builder.Append(count);
+            builder.Append(str[str.Length - 1]);
+            return builder.ToString();
         }
     }
 }

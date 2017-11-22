@@ -23,6 +23,13 @@ namespace LeetCodeSolution
             i1 = Solution2.LongestValidParentheses(")(())(");
             i1 = Solution2.Search(new[] {  5, 6, 7, 1, 2, 3 ,4}, 3);
             int[] arr1 = Solution2.SearchRange(new[] { 5, 7, 7, 8, 8, 10 }, 8);
+            i1 = Solution2.SearchInsert(new[] { 1, 2, 3, 4, 6, 7 }, 5);
+            string str1 = Solution2.CountAndSay(7);
+            var v2 = Solution3.CombinationSum(new[] { 2, 3, 6, 7 }, 7);
+            v2 = Solution3.CombinationSum2(new[] { 10, 1, 2, 7, 6, 1, 5 }, 8);
+            i1 = Solution3.FirstMissingPositive(new[] { 3, 4, -1,1 });
+            i1 = Solution3.Trap(new[] { 0, 1, 0, 2, 1, 0, 1, 1, 2, 1, 2, 1 });
+            str1 = Solution3.Multiply("25", "25");
         }
 
         private static ListNode CreateNode(int start)
